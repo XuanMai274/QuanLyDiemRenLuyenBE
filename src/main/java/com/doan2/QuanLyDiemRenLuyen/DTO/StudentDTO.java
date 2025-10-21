@@ -14,7 +14,7 @@ public class StudentDTO {
     private String status;
     private Boolean isClassMonitor;
 
-    private ClassDTO classEntity;
-    private AccountDTO accountEntity;
-    private ConductFormDTO conductFormEntity;
+    private ClassDTO classDTO;
+    private AccountDTO accountDTO;
+    private ConductFormDTO conductFormDTO;
 }

@@ -18,7 +18,7 @@ public class ConductFormDTO {
     private LocalDateTime updatedDate;
 
     // Quan hệ
-    private SemesterDTO semesterEntity;
-    private StudentDTO studentEntity;
-    private List<ConductFormDetailDTO> conductFormDetailEntityList;
+    private SemesterDTO semester;
+    private StudentDTO student;
+    private List<ConductFormDetailDTO> conductFormDetailList;
 }

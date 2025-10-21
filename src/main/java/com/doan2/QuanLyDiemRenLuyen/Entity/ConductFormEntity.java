@@ -11,7 +11,12 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name="conduct_form")
+@Table(
+        name="conduct_form",
+        uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"student_id", "semester_id"})
+    }
+)
 public class ConductFormEntity {
     @Id
     @Column(name="conduct_form_id")
@@ -33,11 +38,12 @@ public class ConductFormEntity {
     @ManyToOne
     @JoinColumn(name="semester_id")
     private SemesterEntity semesterEntity;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name="Student_id")
     @JsonBackReference
     private StudentEntity studentEntity;
-    @OneToMany(mappedBy ="conductFormEntity" )
+    //cascade = CascadeType.ALL giúp khi lưu ConductForm sẽ lưu luôn ConductFormDetail
+    @OneToMany(mappedBy ="conductFormEntity" ,cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ConductFormDetailEntity> conductFormDetailEntityList;
 
 }
