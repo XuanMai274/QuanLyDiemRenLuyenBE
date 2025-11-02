@@ -1,9 +1,12 @@
 package com.doan2.QuanLyDiemRenLuyen.Entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,7 +25,7 @@ public class ConductFormEntity {
     @Column(name="conduct_form_id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "conduct_form_id")
     @SequenceGenerator(name = "conduct_form_id", sequenceName = "conduct_form_id_seq", allocationSize = 1)
-    private int conduct_form_id;
+    private int conductFormId;
     @Column(name="student_score")
     private int totalStudentScore;
     @Column(name="class_monitor_score")
@@ -38,12 +41,14 @@ public class ConductFormEntity {
     @ManyToOne
     @JoinColumn(name="semester_id")
     private SemesterEntity semesterEntity;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="Student_id")
     @JsonBackReference
     private StudentEntity studentEntity;
     //cascade = CascadeType.ALL giúp khi lưu ConductForm sẽ lưu luôn ConductFormDetail
-    @OneToMany(mappedBy ="conductFormEntity" ,cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy ="conductFormEntity" ,cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SUBSELECT)
+    @JsonManagedReference
     private List<ConductFormDetailEntity> conductFormDetailEntityList;
 
 }

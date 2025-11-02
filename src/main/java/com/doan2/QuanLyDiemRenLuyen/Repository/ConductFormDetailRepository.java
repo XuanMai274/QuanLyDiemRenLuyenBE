@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ConductFormDetailRepository extends CrudRepository<ConductFormDetailEntity,Integer> {
+    ConductFormDetailEntity findByConductFormDetailId(int conductFormDetailId);
 }

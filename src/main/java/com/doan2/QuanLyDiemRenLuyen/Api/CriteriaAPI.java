@@ -7,20 +7,18 @@ import com.doan2.QuanLyDiemRenLuyen.Service.CriteriaTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/manager/criteria")
+//@RequestMapping("/manager/criteria")
 public class CriteriaAPI {
     @Autowired
     CriteriaService criteriaService;
-    @PostMapping("/add")
+    @PostMapping("/manager/criteria/add")
     public ResponseEntity<Map<String,Object>> CriteriaTypeAdd(@RequestBody CriteriaDTO criteriaDTO){
         // thêm vào cơ sở dữ liệu
         CriteriaDTO criteriaDTONew=criteriaService.addCriteria(criteriaDTO);
@@ -35,5 +33,10 @@ public class CriteriaAPI {
             response.put("criteria", null);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
+    }
+    @GetMapping("/criteria/getAll")
+    public ResponseEntity<List<CriteriaDTO>> getAllSemesters() {
+        List<CriteriaDTO> semesters = criteriaService.findAll();
+        return ResponseEntity.ok(semesters);
     }
 }

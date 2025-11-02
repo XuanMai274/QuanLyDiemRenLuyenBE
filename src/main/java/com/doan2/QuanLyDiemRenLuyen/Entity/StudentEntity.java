@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -35,8 +37,8 @@ public class StudentEntity {
     @JoinColumn(name="account_id")
     @JsonBackReference
     private AccountEntity accountEntity;
-    @OneToOne(mappedBy = "studentEntity")
+    @OneToMany(mappedBy = "studentEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
-    private ConductFormEntity conductFormEntity;
+    private List<ConductFormEntity> conductFormEntities;
 
 }

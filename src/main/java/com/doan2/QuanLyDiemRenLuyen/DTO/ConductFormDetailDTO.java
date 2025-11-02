@@ -12,8 +12,9 @@ public class ConductFormDetailDTO {
     private int staffScore;
     private String comment;
     private String file;
-
+    private String tempId;
+    private String publicId;
     // Quan hệ
-    private ConductFormDTO conductFormEntity;
-    private CriteriaDTO criteriaEntity;
+    private ConductFormDTO conductForm;
+    private CriteriaDTO criteria;
 }

@@ -15,7 +15,7 @@ public class ConductFormMapper {
         if (entity == null) return null;
 
         ConductFormDTO dto = new ConductFormDTO();
-        dto.setConductFormId(entity.getConduct_form_id());
+        dto.setConductFormId(entity.getConductFormId());
         dto.setTotalStudentScore(entity.getTotalStudentScore());
         dto.setClassMonitorScore(entity.getClassMonitorScore());
         dto.setStaffScore(entity.getStaff_score());
@@ -28,6 +28,7 @@ public class ConductFormMapper {
             SemesterDTO semesterDTO = new SemesterDTO();
             semesterDTO.setSemesterId(entity.getSemesterEntity().getSemesterId());
             semesterDTO.setSemesterName(entity.getSemesterEntity().getSemesterName());
+            semesterDTO.setYear(entity.getSemesterEntity().getYear());
             dto.setSemester(semesterDTO);
         }
 
@@ -53,7 +54,7 @@ public class ConductFormMapper {
     public ConductFormEntity toEntity(ConductFormDTO dto) {
         if (dto == null) return null;
         ConductFormEntity entity = new ConductFormEntity();
-        entity.setConduct_form_id(dto.getConductFormId());
+        entity.setConductFormId(dto.getConductFormId());
         entity.setTotalStudentScore(dto.getTotalStudentScore());
         entity.setClassMonitorScore(dto.getClassMonitorScore());
         entity.setStaff_score(dto.getStaffScore());
@@ -95,19 +96,20 @@ public class ConductFormMapper {
         if (entity == null) return null;
 
         ConductFormDetailDTO dto = new ConductFormDetailDTO();
-        dto.setConductFormDetailId(entity.getConduct_form_detail_id());
+        dto.setConductFormDetailId(entity.getConductFormDetailId());
         dto.setSelfScore(entity.getSelfScore());
         dto.setClassMonitorScore(entity.getClassMonitorScore());
         dto.setStaffScore(entity.getStaff_score());
         dto.setComment(entity.getComment());
         dto.setFile(entity.getFile());
-
+        dto.setPublicId(entity.getPublic_id());
+        dto.setFile(entity.getFile());
         // Map CriteriaEntity
         if (entity.getCriteriaEntity() != null) {
             CriteriaDTO criteriaDTO = new CriteriaDTO();
             criteriaDTO.setCriteriaId(entity.getCriteriaEntity().getCriteriaId());
             criteriaDTO.setCriteriaName(entity.getCriteriaEntity().getCriteriaName());
-            dto.setCriteriaEntity(criteriaDTO);
+            dto.setCriteria(criteriaDTO);
         }
 
         return dto;
@@ -117,16 +119,16 @@ public class ConductFormMapper {
         if (dto == null) return null;
 
         ConductFormDetailEntity entity = new ConductFormDetailEntity();
-        entity.setConduct_form_detail_id(dto.getConductFormDetailId());
+        entity.setConductFormDetailId(dto.getConductFormDetailId());
         entity.setSelfScore(dto.getSelfScore());
         entity.setClassMonitorScore(dto.getClassMonitorScore());
         entity.setStaff_score(dto.getStaffScore());
         entity.setComment(dto.getComment());
         entity.setFile(dto.getFile());
-
-        if (dto.getCriteriaEntity() != null) {
+        entity.setPublic_id(dto.getPublicId());
+        if (dto.getCriteria() != null) {
             CriteriaEntity criteriaEntity = new CriteriaEntity();
-            criteriaEntity.setCriteriaId(dto.getCriteriaEntity().getCriteriaId());
+            criteriaEntity.setCriteriaId(dto.getCriteria().getCriteriaId());
             entity.setCriteriaEntity(criteriaEntity);
         }
 

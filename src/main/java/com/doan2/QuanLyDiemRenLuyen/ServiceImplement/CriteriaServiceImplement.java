@@ -9,6 +9,9 @@ import com.doan2.QuanLyDiemRenLuyen.Service.CriteriaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class CriteriaServiceImplement implements CriteriaService {
     @Autowired
@@ -29,5 +32,15 @@ public class CriteriaServiceImplement implements CriteriaService {
             // Có thể ném lại exception để controller xử lý
             throw new RuntimeException("Không thể thêm tiêu chí. Vui lòng thử lại sau!", e);
         }
+    }
+
+    @Override
+    public List<CriteriaDTO> findAll() {
+        List<CriteriaEntity> criteriaEntityList=criteriaRepository.findAll();
+        List<CriteriaDTO> criteriaDTOS=new ArrayList<>();
+        for (CriteriaEntity c : criteriaEntityList) {
+            criteriaDTOS.add(criteriaMapper.toDTO(c));
+        }
+        return criteriaDTOS;
     }
 }

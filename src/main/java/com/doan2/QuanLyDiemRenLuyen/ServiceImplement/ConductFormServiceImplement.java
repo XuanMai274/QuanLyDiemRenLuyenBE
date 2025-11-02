@@ -6,9 +6,13 @@ import com.doan2.QuanLyDiemRenLuyen.Entity.ConductFormEntity;
 import com.doan2.QuanLyDiemRenLuyen.Mapper.ConductFormMapper;
 import com.doan2.QuanLyDiemRenLuyen.Repository.ConductFormRepository;
 import com.doan2.QuanLyDiemRenLuyen.Service.ConductFormService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ConductFormServiceImplement implements ConductFormService {
@@ -23,7 +27,7 @@ public class ConductFormServiceImplement implements ConductFormService {
         try {
             // Chuyển DTO sang Entity
             ConductFormEntity conductFormEntity = conductFormMapper.toEntity(conductFormDTO);
-            // 2️⃣ Xử lý mối quan hệ với ConductFormDetailEntity
+            // Xử lý mối quan hệ với ConductFormDetailEntity
             if (conductFormEntity.getConductFormDetailEntityList() != null) {
                 for (ConductFormDetailEntity detailEntity : conductFormEntity.getConductFormDetailEntityList()) {
                     // Gán ngược mối quan hệ cha cho từng detail
@@ -45,4 +49,39 @@ public class ConductFormServiceImplement implements ConductFormService {
             throw new RuntimeException("Không thể thêm phiếu rèn luyện. Vui lòng thử lại sau!", e);
         }
     }
+
+    @Override
+    public List<ConductFormDTO> findByStudentId(int studentId) {
+       try {
+           List<ConductFormDTO> conductFormDTOS=new ArrayList<>();
+           List<ConductFormEntity> conductFormEntities=conductFormRepository.findByStudentEntity_StudentId(studentId);
+           for(ConductFormEntity c: conductFormEntities){
+               conductFormDTOS.add(conductFormMapper.toDTO(c));
+           }
+           return conductFormDTOS;
+       } catch (Exception e) {
+           // Ghi log lỗi ra console (hoặc logger)
+           System.err.println("Lỗi khi lấy danh sách ConductForm: " + e.getMessage());
+           e.printStackTrace();
+
+           // Có thể ném lại exception để controller xử lý
+           throw new RuntimeException("Không thể lâ danh sách phiếu rèn luyện. Vui lòng thử lại sau!", e);
+       }
+    }
+
+    @Override
+    public ConductFormDTO findByConductFormId(int conductFormId) {
+        var entity = conductFormRepository.findByConductFormId(conductFormId);
+
+        if (entity == null) {
+            throw new EntityNotFoundException("Không tìm thấy phiếu rèn luyện với ID: " + conductFormId);
+        }
+
+        try {
+            return conductFormMapper.toDTO(entity);
+        } catch (Exception e) {
+            throw new RuntimeException("Lỗi khi chuyển đổi ConductFormEntity sang DTO", e);
+        }
+    }
+
 }

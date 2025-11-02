@@ -5,6 +5,7 @@ import com.doan2.QuanLyDiemRenLuyen.DTO.CriteriaTypeDTO;
 import com.doan2.QuanLyDiemRenLuyen.Entity.CriteriaEntity;
 import com.doan2.QuanLyDiemRenLuyen.Entity.CriteriaTypeEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -12,6 +13,9 @@ import java.util.stream.Collectors;
 
 @Component
 public class CriteriaTypeMapper {
+    @Autowired
+    @Lazy
+    private CriteriaMapper criteriaMapper;
     // -------------------- Entity → DTO --------------------
     public CriteriaTypeDTO toDTO(CriteriaTypeEntity entity) {
         if (entity == null) return null;
@@ -20,7 +24,14 @@ public class CriteriaTypeMapper {
         dto.setCriteriaTypeId(entity.getCriteriaTypeId());
         dto.setCriteriaTypeName(entity.getCriteriaTypeName());
         dto.setMaxScore(entity.getMaxScore());
-
+        // Ánh xạ danh sách tiêu chí con
+        if (entity.getCriteriaEntityList() != null) {
+            List<CriteriaDTO> criteriaDTOList = entity.getCriteriaEntityList()
+                    .stream()
+                    .map(criteriaMapper::toDTO)
+                    .collect(Collectors.toList());
+            dto.setCriteriaEntityList(criteriaDTOList);
+        }
         return dto;
     }
 
@@ -32,6 +43,15 @@ public class CriteriaTypeMapper {
         entity.setCriteriaTypeId(dto.getCriteriaTypeId());
         entity.setCriteriaTypeName(dto.getCriteriaTypeName());
         entity.setMaxScore(dto.getMaxScore());
+        // Ánh xạ danh sách tiêu chí con (nếu cần thiết khi thêm/sửa)
+        if (dto.getCriteriaEntityList()!= null) {
+            List<CriteriaEntity> criteriaEntities = dto.getCriteriaEntityList()
+                    .stream()
+                    .map(criteriaMapper::toEntity)
+                    .peek(c -> c.setCriteriaTypeEntity(entity)) // gán ngược lại khóa ngoại
+                    .collect(Collectors.toList());
+            entity.setCriteriaEntityList(criteriaEntities);
+        }
         return entity;
     }
 

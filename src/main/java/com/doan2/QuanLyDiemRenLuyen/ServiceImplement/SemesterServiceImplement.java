@@ -8,6 +8,9 @@ import com.doan2.QuanLyDiemRenLuyen.Service.SemesterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class SemesterServiceImplement implements SemesterService {
     @Autowired
@@ -27,5 +30,15 @@ public class SemesterServiceImplement implements SemesterService {
             // Có thể ném lại exception để controller xử lý
             throw new RuntimeException("Không thể thêm hoc ki. Vui lòng thử lại sau!", e);
         }
+    }
+
+    @Override
+    public List<SemesterDTO> findAll() {
+        List<SemesterEntity> semesterEntityList= semesterRepository.findAll();
+        List<SemesterDTO> semesterDTOS=new ArrayList<>();
+        for(SemesterEntity s:semesterEntityList){
+            semesterDTOS.add(semesterMapper.toDTO(s));
+        }
+        return semesterDTOS;
     }
 }

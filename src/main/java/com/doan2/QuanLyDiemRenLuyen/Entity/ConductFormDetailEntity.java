@@ -1,5 +1,6 @@
 package com.doan2.QuanLyDiemRenLuyen.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +14,7 @@ public class ConductFormDetailEntity {
     @Column(name="conduct_form_detail_id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "conduct_form_detail_id")
     @SequenceGenerator(name = "conduct_form_detail_id", sequenceName = "conduct_form_detail_id_seq", allocationSize = 1)
-    private int conduct_form_detail_id;
+    private int conductFormDetailId;
     @Column(name="self_score")
     private int selfScore;
     @Column(name="class_monitor_score")
@@ -24,8 +25,11 @@ public class ConductFormDetailEntity {
     private String comment;
     @Column(name="file")
     private String file;
+    @Column(name="public_id")
+    private String public_id;
     @ManyToOne
     @JoinColumn(name="conduct_form_id")
+    @JsonBackReference
     private ConductFormEntity conductFormEntity;
     @ManyToOne
     @JoinColumn(name="criteria_id")
