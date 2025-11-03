@@ -20,6 +20,9 @@ public class SemesterMapper {
         dto.setStartDate(entity.getStartDate());
         dto.setEndDate(entity.getEndDate());
         dto.setYear(entity.getYear());
+        dto.setOpen(entity.isOpen());
+        dto.setEvaluationStartDate(entity.getEvaluationStartDate());
+        dto.setEvaluationEndDate(entity.getEvaluationEndDate());
         return dto;
     }
 

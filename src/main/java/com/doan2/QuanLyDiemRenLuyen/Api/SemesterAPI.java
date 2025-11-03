@@ -37,4 +37,9 @@ public class SemesterAPI {
         List<SemesterDTO> semesters = semesterService.findAll();
         return ResponseEntity.ok(semesters);
     }
+    @GetMapping("/semester/Open")
+    public ResponseEntity<List<SemesterDTO>> findByIsOpenTrue(){
+        List<SemesterDTO> semesterDTOS=semesterService.findByIsOpenTrue();
+        return ResponseEntity.ok(semesterDTOS);
+    }
 }

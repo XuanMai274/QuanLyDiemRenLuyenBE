@@ -8,6 +8,8 @@ import com.doan2.QuanLyDiemRenLuyen.Service.SemesterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,5 +42,22 @@ public class SemesterServiceImplement implements SemesterService {
             semesterDTOS.add(semesterMapper.toDTO(s));
         }
         return semesterDTOS;
+    }
+
+    @Override
+    public List<SemesterDTO> findByIsOpenTrue() {
+        try{
+            List<SemesterEntity> semesterEntityList=semesterRepository.findOpenSemestersWithinEvaluationPeriod(LocalDate.now());
+            if(semesterEntityList!=null){
+                List<SemesterDTO> semesterDTOS=new ArrayList<>();
+                for(SemesterEntity s:semesterEntityList){
+                    semesterDTOS.add(semesterMapper.toDTO(s));
+                }
+                return semesterDTOS;
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return List.of();
     }
 }

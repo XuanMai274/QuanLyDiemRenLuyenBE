@@ -94,8 +94,6 @@ public class CloudinaryServiceImplement implements CloudinaryService {
             return response;
         }
     }
-
-
 //    @Override
 //    public Map<String, String> uploadImage(MultipartFile file) {
 //        Map<String, String> respone= new HashMap<>();

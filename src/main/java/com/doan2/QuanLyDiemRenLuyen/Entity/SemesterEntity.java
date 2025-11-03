@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -25,6 +26,12 @@ public class SemesterEntity {
     private  LocalDateTime endDate;
     @Column(name="year")
     private String year;
+    @Column(name="is_open")
+    private boolean isOpen;
+    @Column(name = "evaluation_start_date")
+    private LocalDate evaluationStartDate;
+    @Column(name = "evaluation_end_date")
+    private LocalDate evaluationEndDate;
     @OneToMany(mappedBy = "semesterEntity")
     private List<ConductFormEntity> conductFormEntityList;
 
