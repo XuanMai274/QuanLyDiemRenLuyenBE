@@ -2,7 +2,9 @@ package com.doan2.QuanLyDiemRenLuyen.Api;
 
 import com.doan2.QuanLyDiemRenLuyen.DTO.AuthenticationRequest;
 import com.doan2.QuanLyDiemRenLuyen.DTO.AuthenticationResponse;
+import com.doan2.QuanLyDiemRenLuyen.DTO.ManagerDTO;
 import com.doan2.QuanLyDiemRenLuyen.DTO.StudentDTO;
+import com.doan2.QuanLyDiemRenLuyen.Service.ManagerService;
 import com.doan2.QuanLyDiemRenLuyen.Service.StudentService;
 import com.doan2.QuanLyDiemRenLuyen.Utill.CustomJWT;
 import com.doan2.QuanLyDiemRenLuyen.Utill.CustomeUserDetailService;
@@ -34,6 +36,8 @@ public class AuthenticateAPI {
     CustomJWT jwt;
     @Autowired
     StudentService studentService;
+    @Autowired
+    ManagerService managerService;
     @PostMapping("/authenticate")
     public ResponseEntity<?> login(@RequestBody AuthenticationRequest authentication) throws Exception {
         try {
@@ -59,8 +63,8 @@ public class AuthenticateAPI {
         // kiem tra xem nguoi dung hien tai dang role nào
         if(customUser.getAccountEntity().getRole().getRoleName().equals("MANAGER")){
          //   StudentDTO studentDTO=studentService.findByUsername(user.getUsername());
-
-            AuthenticationResponse authenticationResponse = jwt.generateToken(user.getUsername(), 1, "MANAGER");
+            ManagerDTO managerDTO= managerService.findByAccountId(((CustomeUserDetails) user).getAccountEntity().getAccountId());
+            AuthenticationResponse authenticationResponse = jwt.generateToken(user.getUsername(),managerDTO.getManagerId() , "MANAGER");
             authenticationResponse.setRole(customUser.getAccountEntity().getRole().getRoleName());
             return ResponseEntity.ok(authenticationResponse);
         }

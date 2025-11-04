@@ -12,7 +12,6 @@ public class NotificationDTO {
     private String content;
     private LocalDateTime createAt;
     private LocalDateTime updateAt;
-
     // Quan hệ
     private ManagerDTO managerEntity;
 }
