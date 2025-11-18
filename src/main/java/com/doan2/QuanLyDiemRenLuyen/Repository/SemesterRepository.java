@@ -22,5 +22,10 @@ public interface SemesterRepository extends CrudRepository<SemesterEntity,Intege
     List<SemesterEntity> findOpenSemestersWithinEvaluationPeriod(@Param("now") LocalDate now);
     // cách 2:
     //List<SemesterEntity> findByIsOpenTrueAndEvaluationStartDateBeforeAndEvaluationEndDateAfter(LocalDateTime now1, LocalDateTime now2);
+    SemesterEntity findBySemesterId(int semesterId);
+    @Query("SELECT s FROM SemesterEntity s WHERE s.evaluationStartDate IS NOT NULL AND s.evaluationEndDate IS NOT NULL AND s.isOpen = false")
+    List<SemesterEntity> findSemesterOpened();
+    @Query("SELECT s FROM SemesterEntity s WHERE s.evaluationStartDate IS  NULL AND s.evaluationEndDate IS  NULL AND s.isOpen = false")
+    List<SemesterEntity> availableSemesters();
 
 }

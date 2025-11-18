@@ -12,4 +12,5 @@ import java.util.List;
 public interface CriteriaRepository extends CrudRepository<CriteriaEntity,Integer> {
     @NonNull
     List<CriteriaEntity> findAll();
+    CriteriaEntity findByCriteriaId(int criteriaId);
 }

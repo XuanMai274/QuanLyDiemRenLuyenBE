@@ -10,5 +10,6 @@ import java.util.List;
 @Repository
 public interface CriteriaTypeRepository extends CrudRepository<CriteriaTypeEntity,Integer> {
     @NonNull
-    List<CriteriaTypeEntity> findAll();
+    List<CriteriaTypeEntity> findByIsActiveTrue();
+    CriteriaTypeEntity findByCriteriaTypeId(int criteriaTypeId);
 }

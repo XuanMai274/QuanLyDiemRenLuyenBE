@@ -25,21 +25,39 @@ public class ConductFormServiceImplement implements ConductFormService {
     @Override
     public ConductFormDTO addConductForm(ConductFormDTO conductFormDTO) {
         try {
-            // Chuyển DTO sang Entity
-            ConductFormEntity conductFormEntity = conductFormMapper.toEntity(conductFormDTO);
-            // Xử lý mối quan hệ với ConductFormDetailEntity
-            if (conductFormEntity.getConductFormDetailEntityList() != null) {
-                for (ConductFormDetailEntity detailEntity : conductFormEntity.getConductFormDetailEntityList()) {
-                    // Gán ngược mối quan hệ cha cho từng detail
-                    detailEntity.setConductFormEntity(conductFormEntity);
+            if(conductFormDTO.getConductFormId()!=0){
+                ConductFormEntity conductFormEntity=conductFormRepository.findByConductFormId(conductFormDTO.getConductFormId());
+                if(conductFormEntity!=null){
+                    conductFormEntity = conductFormMapper.toEntity(conductFormDTO);
+                    if (conductFormEntity.getConductFormDetailEntityList() != null) {
+                        for (ConductFormDetailEntity detailEntity : conductFormEntity.getConductFormDetailEntityList()) {
+                            // Gán ngược mối quan hệ cha cho từng detail
+                            detailEntity.setConductFormEntity(conductFormEntity);
+                        }
+                    }
+                    // Lưu xuống database
+                    ConductFormEntity savedEntity = conductFormRepository.save(conductFormEntity);
+
+                    // Trả về DTO (từ entity đã được lưu)
+                    return conductFormMapper.toDTO(savedEntity);
                 }
+            }else{
+                // Chuyển DTO sang Entity
+                ConductFormEntity conductFormEntity = conductFormMapper.toEntity(conductFormDTO);
+                // Xử lý mối quan hệ với ConductFormDetailEntity
+                if (conductFormEntity.getConductFormDetailEntityList() != null) {
+                    for (ConductFormDetailEntity detailEntity : conductFormEntity.getConductFormDetailEntityList()) {
+                        // Gán ngược mối quan hệ cha cho từng detail
+                        detailEntity.setConductFormEntity(conductFormEntity);
+                    }
+                }
+                // Lưu xuống database
+                ConductFormEntity savedEntity = conductFormRepository.save(conductFormEntity);
+
+                // Trả về DTO (từ entity đã được lưu)
+                return conductFormMapper.toDTO(savedEntity);
+
             }
-            // Lưu xuống database
-            ConductFormEntity savedEntity = conductFormRepository.save(conductFormEntity);
-
-            // Trả về DTO (từ entity đã được lưu)
-            return conductFormMapper.toDTO(savedEntity);
-
         } catch (Exception e) {
             // Ghi log lỗi ra console (hoặc logger)
             System.err.println("Lỗi khi lưu ConductFormEntity: " + e.getMessage());
@@ -48,6 +66,7 @@ public class ConductFormServiceImplement implements ConductFormService {
             // Có thể ném lại exception để controller xử lý
             throw new RuntimeException("Không thể thêm phiếu rèn luyện. Vui lòng thử lại sau!", e);
         }
+        return null;
     }
 
     @Override

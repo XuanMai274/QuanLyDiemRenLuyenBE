@@ -32,9 +32,17 @@ public class CriteriaTypeAPI {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
+    public ResponseEntity<Map<String,String>> CriteriaTypeUpdate(@RequestBody CriteriaTypeDTO criteriaTypeDTO){
+        return null;
+    }
     @GetMapping("/criteriaType/getAll")
     public ResponseEntity<List<CriteriaTypeDTO>> getAllSemesters() {
         List<CriteriaTypeDTO> semesters = criteriaTypeService.findAll();
         return ResponseEntity.ok(semesters);
+    }
+    @PostMapping("/manager/criteriaType/update")
+    public ResponseEntity<CriteriaTypeDTO> update(@RequestBody CriteriaTypeDTO criteriaTypeDTO){
+        CriteriaTypeDTO criteriaTypeDTO1=criteriaTypeService.addCriteriaType(criteriaTypeDTO);
+        return ResponseEntity.ok(criteriaTypeDTO1);
     }
 }

@@ -37,9 +37,37 @@ public class SemesterAPI {
         List<SemesterDTO> semesters = semesterService.findAll();
         return ResponseEntity.ok(semesters);
     }
+    // hàm sửa học kì
+    @PostMapping("/manager/semester/update")
+    public ResponseEntity<SemesterDTO> update(@RequestBody SemesterDTO semesterDTO){
+        try{
+            SemesterDTO semesterDTO1=semesterService.addSemester(semesterDTO);
+            return ResponseEntity.ok(semesterDTO1);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
     @GetMapping("/semester/Open")
     public ResponseEntity<List<SemesterDTO>> findByIsOpenTrue(){
         List<SemesterDTO> semesterDTOS=semesterService.findByIsOpenTrue();
         return ResponseEntity.ok(semesterDTOS);
     }
+    @PostMapping("manager/createBatch")
+    public ResponseEntity<SemesterDTO> CreateBatch(@RequestBody SemesterDTO semesterDTO){
+        SemesterDTO semester=semesterService.CreateBatch(semesterDTO);
+        return ResponseEntity.ok(semester);
+    }
+    @GetMapping("/manager/semester/opened")
+    public ResponseEntity<List<SemesterDTO>> findSemesterOpened(){
+        List<SemesterDTO> semesterDTOList=semesterService.findSemesterOpened();
+        return ResponseEntity.ok(semesterDTOList);
+    }
+    // tức là học kì chưa từng mở
+    @GetMapping("/manager/semester/available")
+    public ResponseEntity<List<SemesterDTO>> availableSemesters(){
+        List<SemesterDTO> semesterDTOList=semesterService.availableSemesters();
+        return ResponseEntity.ok(semesterDTOList);
+    }
+
 }

@@ -39,4 +39,9 @@ public class CriteriaAPI {
         List<CriteriaDTO> semesters = criteriaService.findAll();
         return ResponseEntity.ok(semesters);
     }
+    @PostMapping("/manager/criteria/update")
+    public ResponseEntity<CriteriaDTO> update(@RequestBody CriteriaDTO criteriaDTO){
+        CriteriaDTO criteriaDTO1=criteriaService.addCriteria(criteriaDTO);
+        return ResponseEntity.ok(criteriaDTO1);
+    }
 }

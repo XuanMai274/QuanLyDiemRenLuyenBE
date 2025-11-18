@@ -24,6 +24,7 @@ public class CriteriaTypeMapper {
         dto.setCriteriaTypeId(entity.getCriteriaTypeId());
         dto.setCriteriaTypeName(entity.getCriteriaTypeName());
         dto.setMaxScore(entity.getMaxScore());
+        dto.setIsActive(entity.isActive());
         // Ánh xạ danh sách tiêu chí con
         if (entity.getCriteriaEntityList() != null) {
             List<CriteriaDTO> criteriaDTOList = entity.getCriteriaEntityList()
@@ -43,6 +44,7 @@ public class CriteriaTypeMapper {
         entity.setCriteriaTypeId(dto.getCriteriaTypeId());
         entity.setCriteriaTypeName(dto.getCriteriaTypeName());
         entity.setMaxScore(dto.getMaxScore());
+        entity.setActive(dto.getIsActive());
         // Ánh xạ danh sách tiêu chí con (nếu cần thiết khi thêm/sửa)
         if (dto.getCriteriaEntityList()!= null) {
             List<CriteriaEntity> criteriaEntities = dto.getCriteriaEntityList()

@@ -10,7 +10,7 @@ public class CriteriaTypeDTO {
     private int criteriaTypeId;
     private String criteriaTypeName;
     private int maxScore;
-
+    private Boolean isActive;
     // Quan hệ
     private List<CriteriaDTO> criteriaEntityList;
 }

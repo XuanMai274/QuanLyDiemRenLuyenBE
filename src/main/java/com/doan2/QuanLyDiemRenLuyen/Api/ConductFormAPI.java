@@ -140,5 +140,115 @@ public class ConductFormAPI {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
+    @PostMapping(value = "/conductForm/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> updateConductForm(
+            @PathVariable("id") int conductFormId,
+            @RequestPart("conductForm") ConductFormDTO dto,
+            @RequestPart(value = "detailFiles", required = false) List<MultipartFile> detailFiles,
+            @RequestPart(value = "detailMeta", required = false) List<DetailMetaDTO> detailMetaList) {
+
+        try {
+            // === 1. KIỂM TRA QUYỀN ===
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if (auth == null || !(auth.getPrincipal() instanceof CustomeUserDetails)) {
+                return ResponseEntity.status(401).body("Unauthorized");
+            }
+            CustomeUserDetails user = (CustomeUserDetails) auth.getPrincipal();
+            int currentStudentId = user.getAccountEntity().getStudentEntity().getStudentId();
+
+            ConductFormDTO existingForm = conductFormService.findByConductFormId(conductFormId);
+            if (existingForm == null) return ResponseEntity.notFound().build();
+            if (existingForm.getStudent() == null ||
+                    existingForm.getStudent().getStudentId() != currentStudentId) {
+                return ResponseEntity.status(403).body("Bạn không có quyền sửa phiếu này");
+            }
+
+            // === 2. LẤY BẢN GỐC TỪ DB ĐỂ GIỮ NGUYÊN CÁC TRƯỜNG KHÔNG THAY ĐỔI ===
+            ConductFormDTO formToUpdate = conductFormService.findByConductFormId(conductFormId);
+            if (formToUpdate == null) return ResponseEntity.notFound().build();
+
+            // CẬP NHẬT CÁC TRƯỜNG CHUNG
+            formToUpdate.setSemester(dto.getSemester());
+            formToUpdate.setTotalStudentScore(dto.getTotalStudentScore());
+            formToUpdate.setClassMonitorScore(dto.getClassMonitorScore());
+            formToUpdate.setStaffScore(dto.getStaffScore());
+            formToUpdate.setStatus(dto.getStatus());
+            // === CẬP NHẬT CÁC TRƯỜNG TRONG DETAIL TỪ DTO GỬI LÊN ===
+            if (dto.getConductFormDetailList() != null) {
+                for (ConductFormDetailDTO updatedDetail : dto.getConductFormDetailList()) {
+                    if (updatedDetail.getCriteria() == null || updatedDetail.getCriteria().getCriteriaId() == 0) {
+                        continue;
+                    }
+
+                    ConductFormDetailDTO targetDetail = formToUpdate.getConductFormDetailList().stream()
+                            .filter(d -> d.getCriteria() != null &&
+                                    updatedDetail.getCriteria().getCriteriaId()==(d.getCriteria().getCriteriaId()))
+                            .findFirst()
+                            .orElse(null);
+
+                    if (targetDetail != null) {
+                        // CẬP NHẬT TẤT CẢ CÁC TRƯỜNG CẦN THIẾT
+                        targetDetail.setSelfScore(updatedDetail.getSelfScore());
+                        targetDetail.setComment(updatedDetail.getComment());
+                        targetDetail.setClassMonitorScore(updatedDetail.getClassMonitorScore());
+                        targetDetail.setStaffScore(updatedDetail.getStaffScore());
+                        // Nếu có thêm trường nào khác thì thêm vào đây
+                    }
+                }
+            }
+            // === 3. CHỈ XỬ LÝ FILE QUA detailMetaList – KHÔNG ĐỂ DTO GHI ĐÈ ===
+            if (detailMetaList != null && !detailMetaList.isEmpty()) {
+                int fileIndex = 0;
+
+                for (DetailMetaDTO meta : detailMetaList) {
+                    if (meta.getCriteriaId() == null) {
+                        return ResponseEntity.badRequest().body("Thiếu criteriaId");
+                    }
+
+                    ConductFormDetailDTO targetDetail = formToUpdate.getConductFormDetailList().stream()
+                            .filter(d -> d.getCriteria() != null &&
+                                    meta.getCriteriaId().equals(d.getCriteria().getCriteriaId()))
+                            .findFirst()
+                            .orElse(null);
+
+                    if (targetDetail == null) continue;
+
+                    // XÓA FILE CŨ
+                    if (Boolean.TRUE.equals(meta.isDeleteOldFile())) {
+                        if (targetDetail.getPublicId() != null) {
+                            cloudinaryService.deleteImage(targetDetail.getPublicId());
+                            targetDetail.setPublicId(null);
+                            targetDetail.setFile(null);
+                        }
+                        continue;
+                    }
+
+                    // UPLOAD FILE MỚI
+                    if (detailFiles != null && fileIndex < detailFiles.size()) {
+                        MultipartFile newFile = detailFiles.get(fileIndex);
+
+                        if (targetDetail.getPublicId() != null) {
+                            cloudinaryService.deleteImage(targetDetail.getPublicId());
+                        }
+
+                        Map<String, String> result = cloudinaryService.uploadImage(newFile);
+                        targetDetail.setFile(result.get("url"));
+                        targetDetail.setPublicId(result.get("public_id"));
+
+                        fileIndex++;
+                    }
+                }
+            }
+            // → Các detail KHÔNG có trong detailMetaList → giữ nguyên hoàn toàn (file + publicId)
+
+            // === 4. LƯU LẠI – CHỈ 1 LẦN DUY NHẤT ===
+            ConductFormDTO saved = conductFormService.addConductForm(formToUpdate);
+            return ResponseEntity.ok(saved);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body("Lỗi: " + e.getMessage());
+        }
+    }
 
 }

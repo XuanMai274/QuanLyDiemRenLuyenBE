@@ -22,22 +22,32 @@ public class CriteriaTypeServiceImplement implements CriteriaTypeService {
     @Override
     public CriteriaTypeDTO addCriteriaType(CriteriaTypeDTO criteriaTypeDTO) {
         try {
-            // chuyển sang entity
-            CriteriaTypeEntity criteriaTypeEntity=criteriaTypeMapper.toEntity(criteriaTypeDTO);
-            // lưu vào Db
-            CriteriaTypeEntity savedEntity=criteriaTypeRepository.save(criteriaTypeEntity);
-            // chuyển ngược lại về DTO
-            return criteriaTypeMapper.toDTO(savedEntity);
+            if(criteriaTypeDTO.getCriteriaTypeId()!=0){
+                CriteriaTypeEntity criteriaTypeEntity=criteriaTypeRepository.findByCriteriaTypeId(criteriaTypeDTO.getCriteriaTypeId());
+                if(criteriaTypeEntity!=null){
+                    criteriaTypeRepository.save(criteriaTypeMapper.toEntity(criteriaTypeDTO));
+                    return criteriaTypeMapper.toDTO(criteriaTypeEntity);
+                }
+            }else {
+                // chuyển sang entity
+                CriteriaTypeEntity criteriaTypeEntity=criteriaTypeMapper.toEntity(criteriaTypeDTO);
+                // lưu vào Db
+                CriteriaTypeEntity savedEntity=criteriaTypeRepository.save(criteriaTypeEntity);
+                // chuyển ngược lại về DTO
+                return criteriaTypeMapper.toDTO(savedEntity);
+            }
+
         } catch (Exception e) {
             System.err.println("Lỗi khi lưu CriteriaEntity: " + e.getMessage());
             // Có thể ném lại exception để controller xử lý
             throw new RuntimeException("Không thể thêm loại tiêu chí. Vui lòng thử lại sau!", e);
         }
+        return null;
     }
 
     @Override
     public List<CriteriaTypeDTO> findAll() {
-        List<CriteriaTypeEntity> criteriaTypeEntities=criteriaTypeRepository.findAll();
+        List<CriteriaTypeEntity> criteriaTypeEntities=criteriaTypeRepository.findByIsActiveTrue();
         List<CriteriaTypeDTO> criteriaTypeDTOS=new ArrayList<>();
         for(CriteriaTypeEntity c:criteriaTypeEntities){
             criteriaTypeDTOS.add(criteriaTypeMapper.toDTO(c));

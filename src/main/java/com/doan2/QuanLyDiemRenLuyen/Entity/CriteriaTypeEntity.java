@@ -20,6 +20,8 @@ public class CriteriaTypeEntity {
     private String criteriaTypeName;
     @Column(name="max_score")
     private int maxScore;
+    @Column(name="is_active")
+    private boolean isActive;
     @OneToMany(mappedBy = "criteriaTypeEntity")
     private List<CriteriaEntity> criteriaEntityList;
 

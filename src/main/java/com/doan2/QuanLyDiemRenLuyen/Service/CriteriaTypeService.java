@@ -9,4 +9,5 @@ import java.util.List;
 public interface CriteriaTypeService {
     CriteriaTypeDTO addCriteriaType(CriteriaTypeDTO criteriaTypeDTO);
     List<CriteriaTypeDTO> findAll();
+    //CriteriaTypeDTO updateCriteriaType(CriteriaTypeDTO criteriaTypeDTO);
 }

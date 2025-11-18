@@ -8,6 +8,6 @@ import lombok.Setter;
 public class DetailMetaDTO {
         private String tempId;
         private Integer criteriaId;
-
+        private boolean deleteOldFile;
 
 }
