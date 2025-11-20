@@ -1,7 +1,9 @@
 package com.doan2.QuanLyDiemRenLuyen.Repository;
 
 import com.doan2.QuanLyDiemRenLuyen.Entity.CriteriaEntity;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.NonNullApi;
 import org.springframework.stereotype.Repository;
@@ -13,4 +15,6 @@ public interface CriteriaRepository extends CrudRepository<CriteriaEntity,Intege
     @NonNull
     List<CriteriaEntity> findAll();
     CriteriaEntity findByCriteriaId(int criteriaId);
+    @Query("select c from CriteriaEntity c where c.criteriaTypeEntity.criteriaTypeId = :criteriaTypeId")
+    List<CriteriaEntity> findByCriteriaTypeId(@Param("criteriaTypeId") int criteriaTypeId);
 }

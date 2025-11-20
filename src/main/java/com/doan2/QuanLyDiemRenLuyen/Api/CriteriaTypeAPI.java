@@ -16,7 +16,7 @@ import java.util.Map;
 public class CriteriaTypeAPI {
     @Autowired
     CriteriaTypeService criteriaTypeService;
-    @PostMapping("/manager/criteriaType/add")
+    @PostMapping("/manager/criteriaType/create")
     public ResponseEntity<Map<String,Object>> CriteriaTypeAdd(@RequestBody CriteriaTypeDTO criteriaTypeDTO){
         // thêm vào cơ sở dữ liệu
         CriteriaTypeDTO criteriaTypeDTONew=criteriaTypeService.addCriteriaType(criteriaTypeDTO);

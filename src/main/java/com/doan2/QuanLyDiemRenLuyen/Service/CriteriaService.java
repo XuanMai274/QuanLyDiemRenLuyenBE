@@ -8,4 +8,5 @@ import java.util.List;
 public interface CriteriaService {
     CriteriaDTO addCriteria(CriteriaDTO criteriaDTO);
     List<CriteriaDTO> findAll();
+    List<CriteriaDTO> findByCriteriaTypeId(int criteriaTypeId);
 }

@@ -22,10 +22,11 @@ public class CriteriaServiceImplement implements CriteriaService {
     public CriteriaDTO addCriteria(CriteriaDTO criteriaDTO) {
         try {
             if(criteriaDTO.getCriteriaId()!=0){
-                CriteriaEntity criteriaTypeEntity= criteriaRepository.findByCriteriaId(criteriaDTO.getCriteriaId());
-                if(criteriaTypeEntity!=null){
-                    criteriaRepository.save(criteriaTypeEntity);
-                    return criteriaMapper.toDTO(criteriaTypeEntity);
+                CriteriaEntity criteriaEntity= criteriaRepository.findByCriteriaId(criteriaDTO.getCriteriaId());
+                if(criteriaEntity!=null){
+                    criteriaEntity=criteriaMapper.toEntity(criteriaDTO);
+                    criteriaRepository.save(criteriaEntity);
+                    return criteriaMapper.toDTO(criteriaEntity);
                 }
             }
            else{
@@ -52,5 +53,18 @@ public class CriteriaServiceImplement implements CriteriaService {
             criteriaDTOS.add(criteriaMapper.toDTO(c));
         }
         return criteriaDTOS;
+    }
+
+    @Override
+    public List<CriteriaDTO> findByCriteriaTypeId(int criteriaTypeId) {
+        List<CriteriaEntity> criteriaEntityList=criteriaRepository.findByCriteriaTypeId(criteriaTypeId);
+        List<CriteriaDTO> criteriaDTOS=new ArrayList<>();
+        if(criteriaEntityList!=null){
+            for(CriteriaEntity c:criteriaEntityList){
+                criteriaDTOS.add(criteriaMapper.toDTO(c));
+            }
+            return criteriaDTOS;
+        }
+        return List.of();
     }
 }

@@ -4,6 +4,7 @@ import com.doan2.QuanLyDiemRenLuyen.DTO.CriteriaDTO;
 import com.doan2.QuanLyDiemRenLuyen.DTO.CriteriaTypeDTO;
 import com.doan2.QuanLyDiemRenLuyen.Service.CriteriaService;
 import com.doan2.QuanLyDiemRenLuyen.Service.CriteriaTypeService;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ import java.util.Map;
 public class CriteriaAPI {
     @Autowired
     CriteriaService criteriaService;
-    @PostMapping("/manager/criteria/add")
+    @PostMapping("/manager/criteria/create")
     public ResponseEntity<Map<String,Object>> CriteriaTypeAdd(@RequestBody CriteriaDTO criteriaDTO){
         // thêm vào cơ sở dữ liệu
         CriteriaDTO criteriaDTONew=criteriaService.addCriteria(criteriaDTO);
@@ -43,5 +44,12 @@ public class CriteriaAPI {
     public ResponseEntity<CriteriaDTO> update(@RequestBody CriteriaDTO criteriaDTO){
         CriteriaDTO criteriaDTO1=criteriaService.addCriteria(criteriaDTO);
         return ResponseEntity.ok(criteriaDTO1);
+    }
+    @GetMapping("/criteria/getByType/{criteriaTypeId}")
+    public ResponseEntity<List<CriteriaDTO>> findByCriteriaTypeId(
+            @PathVariable("criteriaTypeId") int criteriaTypeId
+    ) {
+        List<CriteriaDTO> list = criteriaService.findByCriteriaTypeId(criteriaTypeId);
+        return ResponseEntity.ok(list);
     }
 }

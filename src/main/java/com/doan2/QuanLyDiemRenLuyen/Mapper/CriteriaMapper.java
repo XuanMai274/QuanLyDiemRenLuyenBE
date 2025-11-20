@@ -43,7 +43,8 @@ public class CriteriaMapper {
 
         // Map ManyToOne: CriteriaType
         if (dto.getCriteriaTypeEntity() != null) {
-            CriteriaTypeEntity typeEntity = criteriaTypeMapper.toEntity(dto.getCriteriaTypeEntity());
+            CriteriaTypeEntity typeEntity = new CriteriaTypeEntity();
+            typeEntity.setCriteriaTypeId(dto.getCriteriaTypeEntity().getCriteriaTypeId());
             entity.setCriteriaTypeEntity(typeEntity);
         }
 
