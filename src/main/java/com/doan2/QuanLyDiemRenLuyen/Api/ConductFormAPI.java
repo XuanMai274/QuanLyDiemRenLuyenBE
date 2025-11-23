@@ -250,5 +250,31 @@ public class ConductFormAPI {
             return ResponseEntity.internalServerError().body("Lỗi: " + e.getMessage());
         }
     }
+    @GetMapping("/manager/conductForm/{classId}/{semesterId}")
+    public ResponseEntity<List<ConductFormDTO>> findByClassAndSemester(@PathVariable("classId") int classId, @PathVariable("semesterId")int semesterId){
+        try{
+            List<ConductFormDTO> conductFormDTOList=conductFormService.findByClassAndSemester(classId,semesterId);
+            if(conductFormDTOList!=null){
+                return ResponseEntity.ok(conductFormDTOList);
+            }
+            ResponseEntity.badRequest();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+    @PostMapping("manager/conductForm/update")
+    public ResponseEntity<ConductFormDTO> updateManager(@RequestBody ConductFormDTO conductFormDTO){
+        try{
+            ConductFormDTO conductFormDTO1=conductFormService.updateManager(conductFormDTO);
+            if(conductFormDTO1!=null){
+                return ResponseEntity.ok(conductFormDTO1);
+            }
+            ResponseEntity.badRequest();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
 
 }

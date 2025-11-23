@@ -1,6 +1,7 @@
 package com.doan2.QuanLyDiemRenLuyen.ServiceImplement;
 
 import com.doan2.QuanLyDiemRenLuyen.DTO.ConductFormDTO;
+import com.doan2.QuanLyDiemRenLuyen.DTO.ConductFormDetailDTO;
 import com.doan2.QuanLyDiemRenLuyen.Entity.ConductFormDetailEntity;
 import com.doan2.QuanLyDiemRenLuyen.Entity.ConductFormEntity;
 import com.doan2.QuanLyDiemRenLuyen.Mapper.ConductFormMapper;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,6 +102,46 @@ public class ConductFormServiceImplement implements ConductFormService {
             return conductFormMapper.toDTO(entity);
         } catch (Exception e) {
             throw new RuntimeException("Lỗi khi chuyển đổi ConductFormEntity sang DTO", e);
+        }
+    }
+
+    @Override
+    public List<ConductFormDTO> findByClassAndSemester(int classId, int semester_id) {
+        List<ConductFormEntity> conductFormEntityList=conductFormRepository.findWithStudentAndClassByClassAndSemester(classId,semester_id);
+        if(conductFormEntityList!=null){
+            List<ConductFormDTO> conductFormDTOList=new ArrayList<>();
+            for(ConductFormEntity c:conductFormEntityList){
+                conductFormDTOList.add(conductFormMapper.toDTO(c));
+            }
+            return conductFormDTOList;
+        }
+        return List.of();
+    }
+
+    @Override
+    public ConductFormDTO updateManager(ConductFormDTO conductFormDTO) {
+        try {
+            ConductFormEntity conductFormEntity=conductFormRepository.findByConductFormId(conductFormDTO.getConductFormId());
+            if (conductFormEntity.getConductFormDetailEntityList() != null) {
+                for (ConductFormDetailEntity detailEntity : conductFormEntity.getConductFormDetailEntityList()) {
+                    ConductFormDetailDTO dto = conductFormDTO.getConductFormDetailList()
+                            .stream()
+                            .filter(d -> d.getConductFormDetailId() == detailEntity.getConductFormDetailId())
+                            .findFirst()
+                            .orElse(null);
+
+                    if (dto != null) {
+                        detailEntity.setStaff_score(dto.getStaffScore());
+                    }
+                }
+                conductFormEntity.setStatus("APPROVE");
+                conductFormEntity.setStaff_score(conductFormDTO.getStaffScore());
+                conductFormEntity.setUpdated_date(LocalDateTime.now());
+                conductFormRepository.save(conductFormEntity);
+            }
+            return null;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 

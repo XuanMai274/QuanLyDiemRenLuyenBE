@@ -13,5 +13,15 @@ public interface ConductFormRepository extends CrudRepository<ConductFormEntity,
     @Query("SELECT DISTINCT c FROM ConductFormEntity c WHERE c.studentEntity.studentId = :studentId")
     List<ConductFormEntity> findByStudentEntity_StudentId(@Param("studentId") int studentId);
     ConductFormEntity findByConductFormId(int conductFormId);
+    @Query("SELECT cf " +
+            "FROM ConductFormEntity cf " +
+            "JOIN FETCH cf.studentEntity s " +
+            "JOIN FETCH s.classId c " +
+            "JOIN FETCH cf.semesterEntity sem " +
+            "WHERE c.classId = :classId AND sem.semesterId = :semesterId")
+    List<ConductFormEntity> findWithStudentAndClassByClassAndSemester(
+            @Param("classId") int classId,
+            @Param("semesterId") int semesterId
+    );
 
 }
