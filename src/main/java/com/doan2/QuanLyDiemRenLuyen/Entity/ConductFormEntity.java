@@ -50,5 +50,6 @@ public class ConductFormEntity {
     @Fetch(FetchMode.SUBSELECT)
     @JsonManagedReference
     private List<ConductFormDetailEntity> conductFormDetailEntityList;
-
+    @OneToMany(mappedBy ="conductFormEntity",cascade = CascadeType.ALL )
+    private List<FeedbackEntity> feedbackEntities;
 }

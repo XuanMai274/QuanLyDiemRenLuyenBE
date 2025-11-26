@@ -276,5 +276,17 @@ public class ConductFormAPI {
         }
         return null;
     }
+    @GetMapping("manager/conductForm/studentId/{studentId}")
+    public ResponseEntity<ConductFormDTO> findByStudentId(@PathVariable("studentId") int student){
+        try{
+            ConductFormDTO conductFormDTO= conductFormService.findByOneStudentId( student);
+            if(conductFormDTO!=null){
+                return ResponseEntity.ok(conductFormDTO);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
 
 }

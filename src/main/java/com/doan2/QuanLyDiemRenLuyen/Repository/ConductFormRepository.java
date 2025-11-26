@@ -23,5 +23,5 @@ public interface ConductFormRepository extends CrudRepository<ConductFormEntity,
             @Param("classId") int classId,
             @Param("semesterId") int semesterId
     );
-
+    ConductFormEntity findByStudentEntity_studentId(int studentId);
 }

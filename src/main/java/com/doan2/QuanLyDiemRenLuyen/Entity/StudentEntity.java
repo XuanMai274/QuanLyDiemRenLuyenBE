@@ -40,5 +40,7 @@ public class StudentEntity {
     @OneToMany(mappedBy = "studentEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<ConductFormEntity> conductFormEntities;
+    @OneToMany(mappedBy = "studentEntity" ,cascade = CascadeType.ALL)
+    private List<FeedbackEntity> feedbackEntities;
 
 }

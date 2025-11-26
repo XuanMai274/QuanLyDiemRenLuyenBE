@@ -10,4 +10,5 @@ public interface ConductFormService {
     ConductFormDTO findByConductFormId(int conductFormId);
     List<ConductFormDTO> findByClassAndSemester(int classId,int semester_id);
     ConductFormDTO updateManager(ConductFormDTO conductFormDTO);
+    ConductFormDTO findByOneStudentId(int studentId);
 }

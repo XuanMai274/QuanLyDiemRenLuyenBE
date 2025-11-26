@@ -134,7 +134,7 @@ public class ConductFormServiceImplement implements ConductFormService {
                         detailEntity.setStaff_score(dto.getStaffScore());
                     }
                 }
-                conductFormEntity.setStatus("APPROVE");
+                conductFormEntity.setStatus("APPROVED");
                 conductFormEntity.setStaff_score(conductFormDTO.getStaffScore());
                 conductFormEntity.setUpdated_date(LocalDateTime.now());
                 conductFormRepository.save(conductFormEntity);
@@ -143,6 +143,19 @@ public class ConductFormServiceImplement implements ConductFormService {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public ConductFormDTO findByOneStudentId(int studentId) {
+        try{
+            ConductFormEntity conductFormEntity=conductFormRepository.findByStudentEntity_studentId(studentId);
+            if(conductFormEntity!=null){
+              return conductFormMapper.toDTO(conductFormEntity);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return null;
     }
 
 }
