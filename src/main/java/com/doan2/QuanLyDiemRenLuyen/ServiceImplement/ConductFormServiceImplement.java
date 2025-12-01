@@ -2,9 +2,11 @@ package com.doan2.QuanLyDiemRenLuyen.ServiceImplement;
 
 import com.doan2.QuanLyDiemRenLuyen.DTO.ConductFormDTO;
 import com.doan2.QuanLyDiemRenLuyen.DTO.ConductFormDetailDTO;
+import com.doan2.QuanLyDiemRenLuyen.DTO.StudentVsClassDTO;
 import com.doan2.QuanLyDiemRenLuyen.Entity.ConductFormDetailEntity;
 import com.doan2.QuanLyDiemRenLuyen.Entity.ConductFormEntity;
 import com.doan2.QuanLyDiemRenLuyen.Mapper.ConductFormMapper;
+import com.doan2.QuanLyDiemRenLuyen.Mapper.SemesterMapper;
 import com.doan2.QuanLyDiemRenLuyen.Repository.ConductFormRepository;
 import com.doan2.QuanLyDiemRenLuyen.Service.ConductFormService;
 import jakarta.persistence.EntityNotFoundException;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ConductFormServiceImplement implements ConductFormService {
@@ -22,6 +25,8 @@ public class ConductFormServiceImplement implements ConductFormService {
     ConductFormRepository conductFormRepository;
     @Autowired
     ConductFormMapper conductFormMapper;
+    @Autowired
+    SemesterMapper semesterMapper;
     // mở một Transaction để vừa có thể thêm vào ConductForm vừa có tể thêm vào conductFormDetail
     @Transactional
     @Override
@@ -136,7 +141,7 @@ public class ConductFormServiceImplement implements ConductFormService {
                 }
                 conductFormEntity.setStatus("APPROVED");
                 conductFormEntity.setStaff_score(conductFormDTO.getStaffScore());
-                conductFormEntity.setUpdated_date(LocalDateTime.now());
+                conductFormEntity.setUpdatedDate(LocalDateTime.now());
                 conductFormRepository.save(conductFormEntity);
             }
             return null;
@@ -156,6 +161,70 @@ public class ConductFormServiceImplement implements ConductFormService {
             throw new RuntimeException(e);
         }
         return null;
+    }
+
+    @Override
+    public ConductFormDTO findByStudentAndOrderByCreateAtDesc(int studentId) {
+        ConductFormEntity conductFormEntity=conductFormRepository.findTopByStudentEntity_StudentIdOrderByCreateAtDesc(studentId);
+        if(conductFormEntity!=null){
+            return conductFormMapper.toDTO(conductFormEntity);
+        }
+        return null;
+    }
+
+    @Override
+    public List<ConductFormDTO> findAllConductFormByStudent(int student) {
+        List<ConductFormEntity> conductFormEntitys=conductFormRepository.findByStudentEntity_studentIdOrderBySemesterEntity_semesterId(student);
+        if(conductFormEntitys!=null){
+            List<ConductFormDTO> conductFormDTOS=new ArrayList<>();
+            for(ConductFormEntity c:conductFormEntitys){
+                conductFormDTOS.add(conductFormMapper.toDTO(c));
+            }
+            return conductFormDTOS;
+        }
+        return null;
+    }
+
+    @Override
+    public List<StudentVsClassDTO> compareStudentVsClass(int studentId) {
+        List<ConductFormEntity> studentForms = conductFormRepository.findByStudentId(studentId);
+
+        return studentForms.stream().map(form -> {
+            // Lấy tất cả phiếu của học kỳ này
+            List<ConductFormEntity> semesterForms = conductFormRepository.findBySemesterId(form.getSemesterEntity().getSemesterId());
+
+            // Tính điểm trung bình lớp
+            double classAvg = semesterForms.stream()
+                    .mapToInt(ConductFormEntity::getStaff_score)
+                    .average()
+                    .orElse(0);
+
+            return new StudentVsClassDTO(
+                    semesterMapper.toDTO(form.getSemesterEntity()),
+                    form.getStaff_score(),
+                    classAvg
+            );
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public StudentVsClassDTO compareLatestSemester(int studentId) {
+        List<ConductFormEntity> studentForms = conductFormRepository.findByStudentId(studentId);
+        if (studentForms.isEmpty()) return null;
+
+        // Sắp xếp theo semesterId giảm dần (hoặc createAt)
+        studentForms.sort((a, b) -> b.getSemesterEntity().getSemesterId() - a.getSemesterEntity().getSemesterId());
+
+        ConductFormEntity latestForm = studentForms.get(0);
+
+        List<ConductFormEntity> semesterForms = conductFormRepository.findBySemesterId(latestForm.getSemesterEntity().getSemesterId());
+        double classAvg = semesterForms.stream().mapToInt(ConductFormEntity::getStaff_score).average().orElse(0);
+
+        return new StudentVsClassDTO(
+               semesterMapper.toDTO( latestForm.getSemesterEntity()),
+                latestForm.getStaff_score(),
+                classAvg
+        );
     }
 
 }

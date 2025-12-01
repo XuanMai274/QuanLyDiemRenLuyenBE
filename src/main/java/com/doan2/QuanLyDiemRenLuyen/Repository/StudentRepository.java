@@ -12,4 +12,5 @@ public interface StudentRepository extends CrudRepository<StudentEntity,Integer>
     StudentEntity findByAccountId(@Param("accountId") int accountId);
     @Query("select s from StudentEntity s where s.accountEntity.username = :username ")
     StudentEntity findByUserName(@Param("username") String username);
+    StudentEntity findByStudentId(int studentId);
 }

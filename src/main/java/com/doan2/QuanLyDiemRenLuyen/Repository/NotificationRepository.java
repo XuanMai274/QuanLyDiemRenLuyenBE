@@ -16,4 +16,13 @@ public interface NotificationRepository extends CrudRepository<NotificationEntit
     List<NotificationEntity> findAllByManagerId(@Param("managerId") int managerId);
     @Query("SELECT n FROM NotificationEntity n WHERE n.status = 'open' ORDER BY n.createAt DESC")
     List<NotificationEntity> findAllOpenNotifications();
+    @Query("SELECT n, " +
+            "CASE WHEN (nr.id IS NOT NULL) THEN true ELSE false END " +
+            "FROM NotificationEntity n " +
+            "LEFT JOIN NotificationReadEntity nr " +
+            "ON n = nr.notification AND nr.student.studentId = :studentId " +
+            "WHERE n.status = 'open' " +
+            "ORDER BY n.createAt DESC")
+    List<Object[]> findAllWithReadStatus(@Param("studentId") int studentId);
+
 }

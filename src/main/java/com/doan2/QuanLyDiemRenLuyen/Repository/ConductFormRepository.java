@@ -24,4 +24,12 @@ public interface ConductFormRepository extends CrudRepository<ConductFormEntity,
             @Param("semesterId") int semesterId
     );
     ConductFormEntity findByStudentEntity_studentId(int studentId);
+    ConductFormEntity findTopByStudentEntity_StudentIdOrderByCreateAtDesc(int studentId);
+    List<ConductFormEntity> findByStudentEntity_studentIdOrderBySemesterEntity_semesterId(int studentId);
+    @Query("SELECT c FROM ConductFormEntity c WHERE c.studentEntity.studentId = :studentId")
+    List<ConductFormEntity> findByStudentId(int studentId);
+
+    @Query("SELECT c FROM ConductFormEntity c WHERE c.semesterEntity.semesterId = :semesterId")
+    List<ConductFormEntity> findBySemesterId(int semesterId);
+
 }

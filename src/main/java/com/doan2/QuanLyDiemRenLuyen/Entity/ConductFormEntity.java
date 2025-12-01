@@ -35,9 +35,9 @@ public class ConductFormEntity {
     @Column(name="status")
     private String status;
     @Column(name="create_at")
-    private LocalDateTime create_at;
+    private LocalDateTime createAt;
     @Column(name="updated_date")
-    private LocalDateTime updated_date;
+    private LocalDateTime updatedDate;
     @ManyToOne
     @JoinColumn(name="semester_id")
     private SemesterEntity semesterEntity;

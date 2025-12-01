@@ -20,8 +20,8 @@ public class ConductFormMapper {
         dto.setClassMonitorScore(entity.getClassMonitorScore());
         dto.setStaffScore(entity.getStaff_score());
         dto.setStatus(entity.getStatus());
-        dto.setCreateAt(entity.getCreate_at());
-        dto.setUpdatedDate(entity.getUpdated_date());
+        dto.setCreateAt(entity.getCreateAt());
+        dto.setUpdatedDate(entity.getUpdatedDate());
 
         // Map các quan hệ (chỉ lấy thông tin cần thiết để tránh vòng lặp vô hạn)
         if (entity.getSemesterEntity() != null) {
@@ -59,8 +59,8 @@ public class ConductFormMapper {
         entity.setClassMonitorScore(dto.getClassMonitorScore());
         entity.setStaff_score(dto.getStaffScore());
         entity.setStatus(dto.getStatus());
-        entity.setCreate_at(dto.getCreateAt());
-        entity.setUpdated_date(dto.getUpdatedDate());
+        entity.setCreateAt(dto.getCreateAt());
+        entity.setUpdatedDate(dto.getUpdatedDate());
 
         // Map quan hệ
         if (dto.getSemester() != null) {

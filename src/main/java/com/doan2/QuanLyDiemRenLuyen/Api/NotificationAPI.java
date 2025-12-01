@@ -2,6 +2,7 @@ package com.doan2.QuanLyDiemRenLuyen.Api;
 
 import com.doan2.QuanLyDiemRenLuyen.DTO.ManagerDTO;
 import com.doan2.QuanLyDiemRenLuyen.DTO.NotificationDTO;
+import com.doan2.QuanLyDiemRenLuyen.Service.NotificationReadService;
 import com.doan2.QuanLyDiemRenLuyen.Service.NotificationService;
 import com.doan2.QuanLyDiemRenLuyen.Utill.CustomeUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -21,6 +19,8 @@ import java.util.List;
 public class NotificationAPI {
     @Autowired
     NotificationService notificationService;
+    @Autowired
+    NotificationReadService notificationReadService;
     // lấy lên tất cả các thông báo mà người quản lý hiện tại đã tạo
     @GetMapping("/manager/notification/getAll")
     public ResponseEntity<List<NotificationDTO>> getAllNotificationByManagerId (){
@@ -40,7 +40,12 @@ public class NotificationAPI {
     // lay tất cả thông báo cho sinh viên
     @GetMapping("/notification/getAll")
     public  ResponseEntity<List<NotificationDTO>> getAll(){
-        List<NotificationDTO> notificationDTOS=notificationService.findAll();
+        Authentication authentication=SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !(authentication.getPrincipal() instanceof CustomeUserDetails userDetails)) {
+            return null;
+        }
+        int studentId= ((CustomeUserDetails) userDetails).getAccountEntity().getStudentEntity().getStudentId();
+        List<NotificationDTO> notificationDTOS=notificationService.getAllNotificationsForStudent(studentId);
         if(notificationDTOS!=null){
             return ResponseEntity.ok(notificationDTOS);
         }
@@ -80,5 +85,16 @@ public class NotificationAPI {
             throw new RuntimeException(e);
         }
         return null;
+    }
+    /** Đánh dấu là đã đọc */
+    @PostMapping("student/notification/read/{notificationId}")
+    public ResponseEntity<?> markAsRead(@PathVariable int notificationId) {
+        Authentication authentication=SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !(authentication.getPrincipal() instanceof CustomeUserDetails userDetails)) {
+            return null;
+        }
+        int studentId= ((CustomeUserDetails) userDetails).getAccountEntity().getStudentEntity().getStudentId();
+        notificationReadService.markAsRead(notificationId, studentId);
+        return ResponseEntity.ok().build();
     }
 }

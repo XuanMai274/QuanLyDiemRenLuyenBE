@@ -288,5 +288,53 @@ public class ConductFormAPI {
         }
         return null;
     }
+    @GetMapping("student/dashboard/conductForm")
+    public ResponseEntity<ConductFormDTO> findByStudentAndOrderByCreateAtDesc(){
+        // lấy id của sinh viên hiện tại
+        // kiểm tra đăng nhập và lấy id của người dùng hiện tại
+        Authentication authentication=SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !(authentication.getPrincipal() instanceof CustomeUserDetails userDetails)) {
+            return null;
+        }
+        int id= ((CustomeUserDetails) userDetails).getAccountEntity().getStudentEntity().getStudentId();
+        ConductFormDTO conductFormDTO=conductFormService.findByStudentAndOrderByCreateAtDesc(id);
+        if(conductFormDTO!=null){
+            return ResponseEntity.ok(conductFormDTO);
+        }
+        return null;
+    }
+    @GetMapping("student/dashboard/conductForms")
+    public ResponseEntity<List<ConductFormDTO>> findAllConductFormByStudent(){
+        Authentication authentication=SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !(authentication.getPrincipal() instanceof CustomeUserDetails userDetails)) {
+            return null;
+        }
+        int id= ((CustomeUserDetails) userDetails).getAccountEntity().getStudentEntity().getStudentId();
+        List<ConductFormDTO> conductFormDTOS=conductFormService.findAllConductFormByStudent(id);
+        if(conductFormDTOS!=null){
+            return ResponseEntity.ok(conductFormDTOS);
+        }
+        return null;
+    }
+    // So sánh theo tất cả học kỳ
+    @GetMapping("conductForm/compare/student")
+    public List<StudentVsClassDTO> compareStudentVsClass() {
+        Authentication authentication=SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !(authentication.getPrincipal() instanceof CustomeUserDetails userDetails)) {
+            return null;
+        }
+        int id= ((CustomeUserDetails) userDetails).getAccountEntity().getStudentEntity().getStudentId();
+        return conductFormService.compareStudentVsClass(id);
+    }
 
+    // So sánh 1 học kỳ gần nhất
+    @GetMapping("/conductForm/compare/student/latest")
+    public StudentVsClassDTO compareLatestSemester() {
+        Authentication authentication=SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !(authentication.getPrincipal() instanceof CustomeUserDetails userDetails)) {
+            return null;
+        }
+        int id= ((CustomeUserDetails) userDetails).getAccountEntity().getStudentEntity().getStudentId();
+        return conductFormService.compareLatestSemester(id);
+    }
 }

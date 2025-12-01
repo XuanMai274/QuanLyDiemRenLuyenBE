@@ -18,4 +18,6 @@ public class NotificationDTO {
     private LocalDateTime endDate;
     // Quan hệ
     private ManagerDTO managerEntity;
+    private boolean read;
+
 }

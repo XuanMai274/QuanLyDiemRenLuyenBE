@@ -34,6 +34,7 @@ public class ManagerEntity {
     @JoinColumn(name="account_id")
     @JsonBackReference
     private AccountEntity accountEntity;
-
+    @OneToMany(mappedBy = "managerEntity")
+    private List<FeedbackEntity> feedbackEntities;
 
 }

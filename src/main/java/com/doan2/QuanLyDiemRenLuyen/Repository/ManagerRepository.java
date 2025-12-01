@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
 public interface ManagerRepository extends CrudRepository<ManagerEntity,Integer> {
     @Query("select s from ManagerEntity s where s.accountEntity.accountId = :accountId ")
     ManagerEntity findByAccountId(@Param("accountId") int accountId);
-
+    ManagerEntity findByManagerId(int managerId);
 }

@@ -1,6 +1,7 @@
 package com.doan2.QuanLyDiemRenLuyen.Service;
 
 import com.doan2.QuanLyDiemRenLuyen.DTO.ConductFormDTO;
+import com.doan2.QuanLyDiemRenLuyen.DTO.StudentVsClassDTO;
 
 import java.util.List;
 
@@ -11,4 +12,8 @@ public interface ConductFormService {
     List<ConductFormDTO> findByClassAndSemester(int classId,int semester_id);
     ConductFormDTO updateManager(ConductFormDTO conductFormDTO);
     ConductFormDTO findByOneStudentId(int studentId);
+    ConductFormDTO findByStudentAndOrderByCreateAtDesc(int studentId);
+    List<ConductFormDTO> findAllConductFormByStudent(int student);
+    List<StudentVsClassDTO> compareStudentVsClass(int studentId);
+    StudentVsClassDTO compareLatestSemester(int studentId);
 }

@@ -53,17 +53,16 @@ public class NotificationServiceImplement implements NotificationService {
     }
 
     @Override
-    public List<NotificationDTO> findAll() {
-        try{
-            List<NotificationEntity> notificationEntityList=notificationRepository.findAllOpenNotifications();
-            List<NotificationDTO> notificationDTOs = new ArrayList<>();
-            for(NotificationEntity n:notificationEntityList){
-                notificationDTOs.add(notificationMapper.toDTO(n));
-            }
-            return notificationDTOs;
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+    public List<NotificationDTO> getAllNotificationsForStudent(int studentId) {
+        List<Object[]> list = notificationRepository.findAllWithReadStatus(studentId);
+        List<NotificationDTO> result = new ArrayList<>();
+        for (Object[] obj : list) {
+            NotificationEntity entity = (NotificationEntity) obj[0];
+            boolean read = (Boolean) obj[1];
+            NotificationDTO dto = notificationMapper.toDTO(entity);
+            dto.setRead(read);  // ✅ set trạng thái đọc
+            result.add(dto);
         }
+        return result;
     }
 }

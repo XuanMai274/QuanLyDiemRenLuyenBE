@@ -3,6 +3,8 @@ package com.doan2.QuanLyDiemRenLuyen.DTO;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 public class FeedbackDTO {
@@ -12,4 +14,9 @@ public class FeedbackDTO {
     private String gmail;
     private StudentDTO studentDTO;
     private ConductFormDTO conductFormDTO;
+    private String responseContent;
+    private boolean response;
+    private ManagerDTO managerDTO;
+    private LocalDateTime createAt;
+    private LocalDateTime updatedDate;
 }
