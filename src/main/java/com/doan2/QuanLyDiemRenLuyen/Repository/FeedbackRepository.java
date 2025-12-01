@@ -2,6 +2,7 @@ package com.doan2.QuanLyDiemRenLuyen.Repository;
 
 import com.doan2.QuanLyDiemRenLuyen.Entity.FeedbackEntity;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -10,4 +11,6 @@ import java.util.List;
 public interface FeedbackRepository extends CrudRepository<FeedbackEntity,Integer> {
     FeedbackEntity findByFeedbackId(int feedbackId);
     List<FeedbackEntity> findByStudentEntity_studentId(int studentId);
+    @NonNull
+    List<FeedbackEntity> findAllByOrderByCreateAtDesc();
 }

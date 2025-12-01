@@ -1,6 +1,7 @@
 package com.doan2.QuanLyDiemRenLuyen.ServiceImplement;
 
 import com.doan2.QuanLyDiemRenLuyen.DTO.FeedbackDTO;
+import com.doan2.QuanLyDiemRenLuyen.DTO.ManagerDTO;
 import com.doan2.QuanLyDiemRenLuyen.Entity.ConductFormEntity;
 import com.doan2.QuanLyDiemRenLuyen.Entity.FeedbackEntity;
 import com.doan2.QuanLyDiemRenLuyen.Entity.ManagerEntity;
@@ -86,5 +87,34 @@ public class FeedbackImplement  implements FeedbackService {
             return feedbackDTOS;
         }
         return List.of();
+    }
+
+    @Override
+    public List<FeedbackDTO> findAll() {
+        List<FeedbackEntity> feedbackEntities=feedbackRepository.findAllByOrderByCreateAtDesc();
+        List<FeedbackDTO> feedbackDTOS = new ArrayList<>();
+        for(FeedbackEntity f: feedbackEntities){
+            feedbackDTOS.add(feedbackMapper.toDTO(f));
+        }
+        return feedbackDTOS;
+    }
+
+    @Override
+    public FeedbackDTO update(FeedbackDTO feedbackDTO) {
+        // lấy lên feedback hien tại
+        FeedbackEntity feedbackEntity=feedbackRepository.findByFeedbackId(feedbackDTO.getFeedbackId());
+        ManagerEntity managerEntity=managerRepository.findByManagerId(feedbackDTO.getManagerDTO().getManagerId());
+        if(feedbackEntity!=null){
+            feedbackEntity.setResponseContent(feedbackDTO.getResponseContent());
+            feedbackEntity.setResponse(true);
+            feedbackEntity.setUpdatedDate(LocalDateTime.now());
+            if(managerEntity!=null){
+                feedbackEntity.setManagerEntity(managerEntity);
+            }
+            feedbackRepository.save(feedbackEntity);
+            return feedbackMapper.toDTO(feedbackEntity);
+        }
+
+        return null;
     }
 }

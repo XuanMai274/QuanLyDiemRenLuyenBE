@@ -7,5 +7,6 @@ import java.util.List;
 public interface FeedbackService {
     public FeedbackDTO create(FeedbackDTO feedbackDTO);
     public List<FeedbackDTO> findAllByStudent(int studentId);
-
+    public List<FeedbackDTO> findAll();
+    public FeedbackDTO update(FeedbackDTO feedbackDTO);
 }

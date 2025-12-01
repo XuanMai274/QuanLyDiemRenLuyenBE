@@ -1,6 +1,7 @@
 package com.doan2.QuanLyDiemRenLuyen.Api;
 
 import com.doan2.QuanLyDiemRenLuyen.DTO.FeedbackDTO;
+import com.doan2.QuanLyDiemRenLuyen.DTO.ManagerDTO;
 import com.doan2.QuanLyDiemRenLuyen.DTO.StudentDTO;
 import com.doan2.QuanLyDiemRenLuyen.Service.CloudinaryService;
 import com.doan2.QuanLyDiemRenLuyen.Service.FeedbackService;
@@ -76,6 +77,33 @@ public class FeedbackAPI {
             return ResponseEntity.ok(feedbackDTOS);
         }
         return null;
+    }
+    @GetMapping("manager/feedback/findAll")
+    public ResponseEntity<List<FeedbackDTO>> findAllForManager(){
+        List<FeedbackDTO> feedbackDTOS=feedbackService.findAll();
+        if(feedbackDTOS!=null){
+            return ResponseEntity.ok(feedbackDTOS);
+        }
+        return null;
+    }
+    @PostMapping("manager/feedback/update")
+    public ResponseEntity<FeedbackDTO> Manager_update(@RequestBody FeedbackDTO feedbackDTO){
+        // lấy thông tin của người dùng hiện tại
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !(authentication.getPrincipal() instanceof CustomeUserDetails)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        CustomeUserDetails user = (CustomeUserDetails) authentication.getPrincipal();
+        int managerId = user.getAccountEntity().getManagerEntity().getManagerId();
+        ManagerDTO managerDTO=new ManagerDTO();
+        managerDTO.setManagerId(managerId);
+        feedbackDTO.setManagerDTO(managerDTO);
+        FeedbackDTO feedbackDTO1= feedbackService.update(feedbackDTO);
+        if(feedbackDTO1!=null){
+            return ResponseEntity.ok(feedbackDTO1);
+        }
+        return null;
+
     }
 
 }
