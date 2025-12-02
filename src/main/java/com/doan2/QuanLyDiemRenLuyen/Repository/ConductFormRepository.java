@@ -1,6 +1,8 @@
 package com.doan2.QuanLyDiemRenLuyen.Repository;
 
+import com.doan2.QuanLyDiemRenLuyen.DTO.ClassAverageScoreDTO;
 import com.doan2.QuanLyDiemRenLuyen.Entity.ConductFormEntity;
+import com.doan2.QuanLyDiemRenLuyen.Entity.StudentEntity;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -31,5 +33,16 @@ public interface ConductFormRepository extends CrudRepository<ConductFormEntity,
 
     @Query("SELECT c FROM ConductFormEntity c WHERE c.semesterEntity.semesterId = :semesterId")
     List<ConductFormEntity> findBySemesterId(int semesterId);
+
+    // tính điểm trung bình theo lớp
+    @Query("SELECT new com.doan2.QuanLyDiemRenLuyen.DTO.ClassAverageScoreDTO(" +
+            "c.classId, c.className, AVG(cf.staff_score)) " +
+            "FROM ConductFormEntity cf " +
+            "JOIN cf.studentEntity s " +
+            "JOIN s.classId c " +
+            "WHERE c.facultyId.facultyId = :facultyId " +
+            "GROUP BY c.classId, c.className " +
+            "ORDER BY c.className ASC")
+    List<ClassAverageScoreDTO> findAverageStaffScoreByFaculty(@Param("facultyId") int facultyId);
 
 }

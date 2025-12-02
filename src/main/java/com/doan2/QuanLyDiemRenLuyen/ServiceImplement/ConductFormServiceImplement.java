@@ -1,5 +1,6 @@
 package com.doan2.QuanLyDiemRenLuyen.ServiceImplement;
 
+import com.doan2.QuanLyDiemRenLuyen.DTO.ClassAverageScoreDTO;
 import com.doan2.QuanLyDiemRenLuyen.DTO.ConductFormDTO;
 import com.doan2.QuanLyDiemRenLuyen.DTO.ConductFormDetailDTO;
 import com.doan2.QuanLyDiemRenLuyen.DTO.StudentVsClassDTO;
@@ -225,6 +226,11 @@ public class ConductFormServiceImplement implements ConductFormService {
                 latestForm.getStaff_score(),
                 classAvg
         );
+    }
+
+    @Override
+    public List<ClassAverageScoreDTO> getAverageScoreByFaculty(int facultyId) {
+        return conductFormRepository.findAverageStaffScoreByFaculty(facultyId);
     }
 
 }

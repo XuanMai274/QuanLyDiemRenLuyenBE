@@ -16,7 +16,7 @@ public class FacultyEntity {
     @Column(name="faculty_id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "faculty_id")
     @SequenceGenerator(name = "faculty_id", sequenceName = "faculty_id_seq", allocationSize = 1)
-    private int FacultyId;
+    private int facultyId;
     @Column(name="faculty_name")
     private String facultyName;
     @OneToMany(mappedBy = "facultyId",cascade = CascadeType.ALL)

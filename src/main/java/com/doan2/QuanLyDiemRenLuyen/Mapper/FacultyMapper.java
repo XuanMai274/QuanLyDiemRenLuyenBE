@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class FacultyMapper {
-    public static FacultyDTO toDTO(FacultyEntity entity) {
+    public  FacultyDTO toDTO(FacultyEntity entity) {
         if (entity == null) return null;
 
         FacultyDTO dto = new FacultyDTO();
@@ -19,7 +19,7 @@ public class FacultyMapper {
         return dto;
     }
 
-    public static FacultyEntity toEntity(FacultyDTO dto) {
+    public  FacultyEntity toEntity(FacultyDTO dto) {
         if (dto == null) return null;
 
         FacultyEntity entity = new FacultyEntity();

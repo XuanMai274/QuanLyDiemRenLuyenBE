@@ -3,6 +3,8 @@ package com.doan2.QuanLyDiemRenLuyen.DTO;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 public class StudentDTO {
@@ -16,5 +18,5 @@ public class StudentDTO {
 
     private ClassDTO classDTO;
     private AccountDTO accountDTO;
-    private ConductFormDTO conductFormDTO;
+    private List<ConductFormDTO> conductFormDTO;
 }

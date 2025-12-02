@@ -1,5 +1,6 @@
 package com.doan2.QuanLyDiemRenLuyen.Service;
 
+import com.doan2.QuanLyDiemRenLuyen.DTO.ClassAverageScoreDTO;
 import com.doan2.QuanLyDiemRenLuyen.DTO.ConductFormDTO;
 import com.doan2.QuanLyDiemRenLuyen.DTO.StudentVsClassDTO;
 
@@ -16,4 +17,5 @@ public interface ConductFormService {
     List<ConductFormDTO> findAllConductFormByStudent(int student);
     List<StudentVsClassDTO> compareStudentVsClass(int studentId);
     StudentVsClassDTO compareLatestSemester(int studentId);
+    public List<ClassAverageScoreDTO> getAverageScoreByFaculty(int facultyId);
 }

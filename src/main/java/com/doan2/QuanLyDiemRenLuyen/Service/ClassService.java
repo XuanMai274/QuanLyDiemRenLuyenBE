@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface ClassService {
     List<ClassDTO> findAll();
+    List<ClassDTO> findByFacultyId(int facultyId);
+
 }
