@@ -13,8 +13,15 @@ import java.util.List;
 @Repository
 public interface CriteriaRepository extends CrudRepository<CriteriaEntity,Integer> {
     @NonNull
+    @Query("select c from CriteriaEntity c order by c.criteriaId")
     List<CriteriaEntity> findAll();
+
     CriteriaEntity findByCriteriaId(int criteriaId);
-    @Query("select c from CriteriaEntity c where c.criteriaTypeEntity.criteriaTypeId = :criteriaTypeId")
+
+    @Query("select c from CriteriaEntity c where c.criteriaTypeEntity.criteriaTypeId = :criteriaTypeId order by c.criteriaId")
     List<CriteriaEntity> findByCriteriaTypeId(@Param("criteriaTypeId") int criteriaTypeId);
+//    List<CriteriaEntity> findAll();
+//    CriteriaEntity findByCriteriaId(int criteriaId);
+//    @Query("select c from CriteriaEntity c where c.criteriaTypeEntity.criteriaTypeId = :criteriaTypeId")
+//    List<CriteriaEntity> findByCriteriaTypeId(@Param("criteriaTypeId") int criteriaTypeId);
 }
